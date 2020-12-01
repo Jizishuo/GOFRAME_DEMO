@@ -14,6 +14,7 @@ import (
 	"wep_app/dao/mysql"
 	"wep_app/dao/redis"
 	"wep_app/logger"
+	"wep_app/pkg/snowflake"
 	"wep_app/routes"
 	"wep_app/settings"
 	"context"
@@ -66,10 +67,16 @@ func main()  {
 
 	// 初始化redis
 	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
-		fmt.Printf("init setting err: %v\n", err)
+		fmt.Printf("init redis err: %v\n", err)
 		return
 	}
 	defer redis.Close()
+
+	// 雪花算法
+	if err:= snowflake.Init(settings.Conf.Startime, settings.Conf.MachineID); err!=nil {
+		fmt.Printf("init snowflake err: %v\n", err)
+		return
+	}
 
 	// 注册路由
 	r := routes.SetUp()
