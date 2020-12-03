@@ -8,6 +8,7 @@ import (
 
 func SignUpHandler(c *gin.Context)  {
 	// 1 参数校验
+	c.Params()
 
 	// 2. 业务处理
 	logic.SignUp()
