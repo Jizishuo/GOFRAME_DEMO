@@ -2,10 +2,11 @@ package logic
 
 import (
 	"wep_app/dao/mysql"
+	"wep_app/models"
 	"wep_app/pkg/snowflake"
 )
 
-func SignUp()  {
+func SignUp(p *models.ParamSignUp)  {
 	// 1. 判断用户存不存在
 	mysql.QueryUserByUserName()
 	// 2. 生成uid
