@@ -25,7 +25,7 @@ func SignUpHandler(c *gin.Context)  {
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"msg": errs.Translate(trans), // 翻译错误
+				"msg": removeTopStruct(errs.Translate(trans)), // 翻译错误
 			})
 		}
 

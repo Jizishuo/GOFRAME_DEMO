@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/gin-gonic/gin"
+	// "github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -63,44 +62,53 @@ func InitTrans(locale string) (err error) {
 	return
 }
 
-type SignUpParam struct {
-	Age        uint8  `json:"age" binding:"gte=1,lte=130"`
-	Name       string `json:"name" binding:"required"`
-	Email      string `json:"email" binding:"required,email"`
-	Password   string `json:"password" binding:"required"`
-	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
-}
+//type SignUpParam struct {
+//	Age        uint8  `json:"age" binding:"gte=1,lte=130"`
+//	Name       string `json:"name" binding:"required"`
+//	Email      string `json:"email" binding:"required,email"`
+//	Password   string `json:"password" binding:"required"`
+//	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
+//}
 
-func main() {
-	if err := InitTrans("zh"); err != nil {
-		fmt.Printf("init trans failed, err:%v\n", err)
-		return
+// 去除提醒信息中的结构体名称
+func removeTopStruct(fields map[string]string) map[string]string {
+	res := map[string]string{}
+	for field, err := range fields {
+		res[field[strings.Index(field, ".")+1:]] = err
 	}
-
-	r := gin.Default()
-
-	r.POST("/signup", func(c *gin.Context) {
-		var u SignUpParam
-		if err := c.ShouldBind(&u); err != nil {
-			// 获取validator.ValidationErrors类型的errors
-			errs, ok := err.(validator.ValidationErrors)
-			if !ok {
-				// 非validator.ValidationErrors类型错误直接返回
-				c.JSON(http.StatusOK, gin.H{
-					"msg": err.Error(),
-				})
-				return
-			}
-			// validator.ValidationErrors类型错误则进行翻译
-			c.JSON(http.StatusOK, gin.H{
-				"msg":errs.Translate(trans),
-			})
-			return
-		}
-		// 保存入库等具体业务逻辑代码...
-
-		c.JSON(http.StatusOK, "success")
-	})
-
-	_ = r.Run(":8999")
+	return res
 }
+
+//func main() {
+//	if err := InitTrans("zh"); err != nil {
+//		fmt.Printf("init trans failed, err:%v\n", err)
+//		return
+//	}
+//
+//	r := gin.Default()
+//
+//	r.POST("/signup", func(c *gin.Context) {
+//		var u SignUpParam
+//		if err := c.ShouldBind(&u); err != nil {
+//			// 获取validator.ValidationErrors类型的errors
+//			errs, ok := err.(validator.ValidationErrors)
+//			if !ok {
+//				// 非validator.ValidationErrors类型错误直接返回
+//				c.JSON(http.StatusOK, gin.H{
+//					"msg": err.Error(),
+//				})
+//				return
+//			}
+//			// validator.ValidationErrors类型错误则进行翻译
+//			c.JSON(http.StatusOK, gin.H{
+//				"msg":errs.Translate(trans),
+//			})
+//			return
+//		}
+//		// 保存入库等具体业务逻辑代码...
+//
+//		c.JSON(http.StatusOK, "success")
+//	})
+//
+//	_ = r.Run(":8999")
+//}
