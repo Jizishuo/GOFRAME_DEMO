@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"wep_app/controllers"
 	"wep_app/dao/mysql"
 	"wep_app/dao/redis"
 	"wep_app/logger"
@@ -75,6 +76,12 @@ func main()  {
 	// 雪花算法
 	if err:= snowflake.Init(settings.Conf.Startime, settings.Conf.MachineID); err!=nil {
 		fmt.Printf("init snowflake err: %v\n", err)
+		return
+	}
+
+	// 注册gin框架内置的校验器 翻译器
+	if err:=controllers.InitTrans("zh"); err !=nil {
+		fmt.Printf("init validator zh error:%v\n", err)
 		return
 	}
 
