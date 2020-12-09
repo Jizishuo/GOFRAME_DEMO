@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"wep_app/models"
 
 	// "github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -31,6 +32,8 @@ func InitTrans(locale string) (err error) {
 			}
 			return name
 		})
+		// 注册自定义检验
+		v.RegisterStructValidation(SignUpParamStructLevelValidation, models.ParamSignUp{})
 
 		zhT := zh.New() // 中文翻译器
 		enT := en.New() // 英文翻译器
@@ -112,3 +115,14 @@ func removeTopStruct(fields map[string]string) map[string]string {
 //
 //	_ = r.Run(":8999")
 //}
+
+
+// SignUpParamStructLevelValidation 自定义SignUpParam结构体校验函数
+func SignUpParamStructLevelValidation(sl validator.StructLevel) {
+	su := sl.Current().Interface().(models.ParamSignUp)
+
+	if su.Password != su.RePassword {
+		// 输出错误提示信息，最后一个参数就是传递的param
+		sl.ReportError(su.RePassword, "re_password", "RePassword", "eqfield", "password")
+	}
+}
