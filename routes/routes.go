@@ -7,7 +7,10 @@ import (
 	"wep_app/logger"
 )
 
-func SetUp() *gin.Engine {
+func SetUpRouter(mode string) *gin.Engine {
+	if mode == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)  // gin设置发布模式
+	}
 
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))

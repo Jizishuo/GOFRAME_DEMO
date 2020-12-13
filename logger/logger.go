@@ -16,7 +16,7 @@ import (
 	"wep_app/settings"
 )
 
-func Init(cfg *settings.LogConfig) (err error){
+func Init(cfg *settings.LogConfig, mode string) (err error){
 	writeSyncer := getLogWriter(
 		cfg.FileName,
 		cfg.MaxSize,
@@ -30,10 +30,26 @@ func Init(cfg *settings.LogConfig) (err error){
 	if err != nil {
 		return
 	}
-	core := zapcore.NewCore(encoder, writeSyncer, level)
+	// core := zapcore.NewCore(encoder, writeSyncer, level)
 
+	var core zapcore.Core
+	// 增加打印
+	if mode == "dev" {
+		// 开发模式 日志输出终端
+
+	} else {
+		core = zapcore.NewCore(encoder, writeSyncer, level)
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		core = zapcore.NewTee(
+			// newtee 创造2个输出
+			zapcore.NewCore(encoder, writeSyncer, level),
+			// zapcore.Lock(os.Stdout) 标准输出 == print
+			zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zap.DebugLevel),
+		)
+	}
 	lg := zap.New(core, zap.AddCaller())
 	// 替换全局的log  使用zap.L().info("xxxx")
+
 	zap.ReplaceGlobals(lg)
 	return nil
 	// sugarLogger = logger.Sugar()
