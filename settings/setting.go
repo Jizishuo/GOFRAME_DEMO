@@ -8,44 +8,43 @@ import (
 )
 
 // Conf 全局变量， 保存全局配置信息
-var Conf  = new(AppConfig)
+var Conf = new(AppConfig)
 
 type AppConfig struct {
 	Name         string `mapstructure:"name"`
 	Mode         string `mapstructure:"mode"`
 	Version      string `mapstructure:"version"`
-	Port         int `mapstructure:"port"`
+	Port         int    `mapstructure:"port"`
 	Startime     string `mapstructure:"start_time"`
-	MachineID    int64 `mapstructure:"machine_id"`
+	MachineID    int64  `mapstructure:"machine_id"`
 	*LogConfig   `mapstructure:"log"`
 	*MySQLConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
 }
 
 type LogConfig struct {
-	Level         string `mapstructure:"level"`
-	FileName      string `mapstructure:"filename"`
-	MaxSize       int `mapstructure:"max_size"`
-	MaxAge        int `mapstructure:"max_age"`
-	MaxBackups    int `mapstructure:"max_backups"`
+	Level      string `mapstructure:"level"`
+	FileName   string `mapstructure:"filename"`
+	MaxSize    int    `mapstructure:"max_size"`
+	MaxAge     int    `mapstructure:"max_age"`
+	MaxBackups int    `mapstructure:"max_backups"`
 }
 type MySQLConfig struct {
-	Host           string `mapstructure:"host"`
-	User           string `mapstructure:"user"`
-	Password       string `mapstructure:"password"`
-	DbName         string `mapstructure:"dbname"`
-	Port           int `mapstructure:"port"`
-	MaxOpenConns   int `mapstructure:"max_open_conns"`
-	MaxIdleConns   int `mapstructure:"max_idle_conns"`
+	Host         string `mapstructure:"host"`
+	User         string `mapstructure:"user"`
+	Password     string `mapstructure:"password"`
+	Db           string `mapstructure:"dbname"`
+	Port         int    `mapstructure:"port"`
+	MaxOpenConns int    `mapstructure:"max_open_conns"`
+	MaxIdleConns int    `mapstructure:"max_idle_conns"`
 }
 
 type RedisConfig struct {
-	Host           string `mapstructure:"host"`
-	Password       string `mapstructure:"password"`
-	DB             int `mapstructure:"db"`
-	PoolSize       int `mapstructure:"pool_size"`
+	Host     string `mapstructure:"host"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+	PoolSize int    `mapstructure:"pool_size"`
 }
-
 
 func Init() (err error) {
 	// viper.SetConfigFile("./conf/config.yaml")
