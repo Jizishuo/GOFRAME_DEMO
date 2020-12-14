@@ -17,9 +17,20 @@ func SetUpRouter(mode string) *gin.Engine {
 
 	// 注册路由
 	r.POST("/signup", controllers.SignUpHandler)
+	r.POST("/login", controllers.LoginHandler)
+
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "ping")
+	})
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "ok")
+	})
+
+	r.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "404",
+		})
 	})
 
 	return r

@@ -52,3 +52,37 @@ func SignUpHandler(c *gin.Context)  {
 	// 3. 返回响应
 	c.JSON(http.StatusOK, "success")
 }
+
+func LoginHandler(c *gin.Context)  {
+	// 获取请求参数。校验
+	p := new(models.ParamLogin)
+	if err := c.ShouldBindJSON(p);err != nil {
+		// 请求参数有误
+		zap.L().Error("login with invalid param", zap.Error(err))
+		// 判断err 是不是校验器的错误
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			c.JSON(http.StatusOK, gin.H{
+				"msg": err.Error(),
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"msg": removeTopStruct(errs.Translate(trans)), // 翻译错误
+			})
+		}
+
+		return
+	}
+	// 落伍逻辑
+	if err:=logic.Login(p); err!= nil {
+		c.JSON(http.StatusOK,gin.H{
+			"msg": "登录失败",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "登录成功",
+	})
+
+	// 返回响应
+}
