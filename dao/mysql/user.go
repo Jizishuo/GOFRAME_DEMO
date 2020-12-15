@@ -10,6 +10,12 @@ import (
 
 const secret = "jizishuo.jizishuo"
 
+var (
+	ErrorUserExist = errors.New("用户已经存在")
+	ErrorUserNotExist = errors.New("用户不存在")
+	ErrorInvalidPassword = errors.New("密码错误")
+)
+
 func CheckUserExist(username string) (error) {
 	// 查询用户是否存在
 	sqlStr := `select count(user_id) from user where username = ?`
@@ -18,7 +24,7 @@ func CheckUserExist(username string) (error) {
 		return err
 	}
 	if conut > 0 {
-		return errors.New("用户已经存在")
+		return ErrorUserExist
 	}
 	return nil
 
@@ -48,7 +54,7 @@ func Login(user *models.User) (err error) {
 	sqlStr := `select user_id, username,password from user where username=?`
 	err = db.Get(user, sqlStr, user.Username)
 	if err == sql.ErrNoRows {
-		return errors.New("用户不存在")
+		return ErrorUserNotExist
 	}
 	if err != nil {
 		return err
@@ -56,7 +62,7 @@ func Login(user *models.User) (err error) {
 	// 判断密码
 	password := encryptPassword(oPassword)
 	if password != user.Password {
-		return errors.New("密码错误")
+		return ErrorInvalidPassword
 	}
 	return nil
 }
