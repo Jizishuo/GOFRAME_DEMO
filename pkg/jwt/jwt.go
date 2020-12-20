@@ -3,6 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/spf13/viper"
 	"time"
 )
 
@@ -28,7 +29,9 @@ func GenToken(userID int64, username string) (string, error) {
 		userID,
 		username, // 自定义字段
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间
+			//ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间
+			ExpiresAt: time.Now().Add(
+				time.Duration(viper.GetInt("auth.jwt_exgier"))*time.Hour).Unix(), // 过期时间
 			Issuer:    "showapp",                               // 签发人 可以是app的名字
 		},
 	}

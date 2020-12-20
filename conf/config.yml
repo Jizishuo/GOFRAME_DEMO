@@ -5,6 +5,10 @@ app:
   start_time: "2021-01-01"
   machine_id: 1
 
+auth:
+  # 34*365
+  jwt_exgier:8765
+
 log:
   level: "debug"
   filename: "wep_app.log"
