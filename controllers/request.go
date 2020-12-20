@@ -3,7 +3,9 @@ package controllers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"wep_app/middlewares"
+)
+const (
+	CtxtUserIDKey = "userID"
 )
 
 var (
@@ -12,7 +14,7 @@ var (
 
 // 获取当前登录用户的id
 func GetCurrentUser(c *gin.Context) (userID int64, err error) {
-	uid, ok := c.Get(middlewares.CtxtUserIDKey)
+	uid, ok := c.Get(CtxtUserIDKey)
 	if !ok {
 		err = ErrorUserNotLogin
 		return
