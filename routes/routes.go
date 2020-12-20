@@ -16,9 +16,18 @@ func SetUpRouter(mode string) *gin.Engine {
 	r := gin.New()
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
+	// v1 版本
+	v1 := r.Group("api/v1")
+
 	// 注册路由
-	r.POST("/signup", controllers.SignUpHandler)
-	r.POST("/login", controllers.LoginHandler)
+	v1.POST("/signup", controllers.SignUpHandler)
+	v1.POST("/login", controllers.LoginHandler)
+
+	v1.Use(middlewares.JWTAuthMiddleware()) //使用jwt中间件
+	{
+		v1.GET("/community", controllers.CommunityHandler)
+	}
+
 
 	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
