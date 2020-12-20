@@ -86,8 +86,10 @@ func LoginHandler(c *gin.Context)  {
 
 		// return
 	}
-	// 落伍逻辑
-	if err:=logic.Login(p); err!= nil {
+	// 登录逻辑
+	token, err:=logic.Login(p)
+
+	if err!= nil {
 		zap.L().Error("login failed", zap.String("username", p.Username), zap.Error(err))
 		//c.JSON(http.StatusOK,gin.H{
 		//	"msg": "登录失败",
@@ -104,5 +106,5 @@ func LoginHandler(c *gin.Context)  {
 	//})
 
 	// 返回响应
-	ResponseSuccess(c, CodeSuccess)
+	ResponseSuccess(c, token)
 }

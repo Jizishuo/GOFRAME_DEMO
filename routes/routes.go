@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"wep_app/controllers"
 	"wep_app/logger"
+	"wep_app/middlewares"
 )
 
 func SetUpRouter(mode string) *gin.Engine {
@@ -19,8 +20,8 @@ func SetUpRouter(mode string) *gin.Engine {
 	r.POST("/signup", controllers.SignUpHandler)
 	r.POST("/login", controllers.LoginHandler)
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "ping")
+	r.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
 	})
 
 	r.GET("/", func(c *gin.Context) {
@@ -35,3 +36,5 @@ func SetUpRouter(mode string) *gin.Engine {
 
 	return r
 }
+
+
